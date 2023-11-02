@@ -24,6 +24,18 @@ import swaggerDocs from './util/swagger';
 const PORT = 3000;
 const app: Express = express();
 
+if (!String.prototype.replaceAll) {
+  String.prototype.replaceAll = function(str, newStr:any){
+    // If a regex pattern
+    if (Object.prototype.toString.call(str).toLowerCase() === '[object regexp]') {
+      return this.replace(str, newStr);
+    }
+    // If a string
+    return this.replace(new RegExp(str, 'g'), newStr);
+  };
+}
+
+
 //SETTING UP VIEW ENGINE TO EJS
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -42,7 +54,8 @@ app.use(express.json());
 app.use(session({
   store: new pgSession({
       pool: pool,   
-      tableName: 'session'   
+      tableName: 'session',
+      escapePgIdentifier: (value:any) => value.replace(/"/g, '""')    
   }),
   secret: process.env.SESSION_SECRET || 'your secret',  
   resave: false,
