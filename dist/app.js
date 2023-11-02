@@ -38,7 +38,8 @@ app.use(express_1.default.json());
 app.use((0, express_session_1.default)({
     store: new pgSession({
         pool: dbconfig_1.default,
-        tableName: 'session'
+        tableName: 'session',
+        escapePgIdentifier: (value) => value.replace(/"/g, '""')
     }),
     secret: process.env.SESSION_SECRET || 'your secret',
     resave: false,
