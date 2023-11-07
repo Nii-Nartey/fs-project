@@ -25,16 +25,17 @@ const PORT = 3000;
 const app: Express = express();
 
 if (!String.prototype.replaceAll) {
-  String.prototype.replaceAll = function(str, newStr:any){
+  String.prototype.replaceAll = function (str, newStr: any) {
     // If a regex pattern
-    if (Object.prototype.toString.call(str).toLowerCase() === '[object regexp]') {
+    if (
+      Object.prototype.toString.call(str).toLowerCase() === '[object regexp]'
+    ) {
       return this.replace(str, newStr);
     }
     // If a string
     return this.replace(new RegExp(str, 'g'), newStr);
   };
 }
-
 
 //SETTING UP VIEW ENGINE TO EJS
 app.set('view engine', 'ejs');
@@ -51,17 +52,19 @@ app.use(urlencoded({ extended: false }));
 app.use(express.json());
 
 // Use connect-pg-simple for session store
-app.use(session({
-  store: new pgSession({
-      pool: pool,   
+app.use(
+  session({
+    store: new pgSession({
+      pool: pool,
       tableName: 'session',
-      escapePgIdentifier: (value:any) => value.replace(/"/g, '""')    
-  }),
-  secret: process.env.SESSION_SECRET || 'your secret',  
-  resave: false,
-  saveUninitialized: false,
-  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } 
-}));
+      escapePgIdentifier: (value: any) => value.replace(/"/g, '""'),
+    }),
+    secret: process.env.SESSION_SECRET || 'your secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 },
+  })
+);
 
 //FLASH
 app.use(flash());
@@ -89,4 +92,6 @@ swaggerDocs(app, PORT);
 
 export default app;
 
-app.listen(process.env.PORT || PORT);
+app.listen(process.env.PORT || PORT, () => {
+  console.log('App has launched');
+});

@@ -16,7 +16,7 @@ const getProductsFromFile = (cb: (products: any[]) => void) => {
   });
 };
 
-interface aProduct {
+interface IProduct {
   title: string;
   imageUrl: string;
   description: string;

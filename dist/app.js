@@ -49,12 +49,12 @@ app.use((0, express_session_1.default)({
     store: new pgSession({
         pool: dbconfig_1.default,
         tableName: 'session',
-        escapePgIdentifier: (value) => value.replace(/"/g, '""')
+        escapePgIdentifier: (value) => value.replace(/"/g, '""'),
     }),
     secret: process.env.SESSION_SECRET || 'your secret',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }
+    cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 },
 }));
 //FLASH
 app.use((0, express_flash_1.default)());
@@ -73,4 +73,6 @@ app.use(shopRoute_1.default);
 //SWAGGER UI AND JSDOC
 (0, swagger_1.default)(app, PORT);
 exports.default = app;
-app.listen(process.env.PORT || PORT);
+app.listen(process.env.PORT || PORT, () => {
+    console.log('App has launched');
+});
